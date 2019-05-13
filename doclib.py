@@ -2,47 +2,65 @@ import websockets
 import websocket
 import json
 import re
+from attrdict import AttrDict
+
+class message:
+    def __init__(self, json={}):
+        self.dict = AttrDict(json)
 
 class bot:
     def __init__(self, nick, room):
         self.nick = nick
         self.room = room
+        self.normname = re.sub(r"\s+", "", self.nick)
 
     def connect(self):
         self.conn = websocket.create_connection(f'wss://euphoria.io/room/{self.room}/ws')
         self.setNick(self.nick)
-        print("connected.")
+        print('connected.')
 
-    def sendMsg(self, msg, parent={}):
-        self.conn.send(json.dumps({'type': 'send', 'data': {'content': msg, "parent": parent['data']['id']}}))
-        print(f"Message sent: {msg} replying to: {parent['data']['id']} by {parent['data']['sender']['name']}")
+    def sendMsg(self, msg, parent=message()):
+        self.conn.send(json.dumps({'type': 'send', 'data': {'content': msg, 'parent': parent.dict.data.id}}))
+        reply = message(json.loads(self.conn.recv()))
+        print(f'Message sent: {reply.dict.data.content} replying to: {parent.dict.data.id} by {parent.dict.data.sender.name}')
+        return reply
 
     def start(self):
-        while True:
-            msg = json.loads(self.conn.recv())
-            if msg['type'] == "ping-event":
-                self.conn.send(json.dumps({"type": "ping-reply", "data": {"time": msg["data"]["time"]}}))
-            elif msg['type'] == "send-event" and msg['data']['sender']['name'] != self.nick:
-                for regex, response in self.regexes.items():
-                    if re.search("^!kill @DocBot$", msg["data"]["content"]) != None and msg['data']['sender']['is_manager']:
-                        self.conn.close()
-                    elif re.search(regex, msg["data"]["content"]) != None:
-                        if callable(response):
-                            result = response(msg)
-                            if type(result) == str:
-                                self.sendMsg(result, msg)
-                            elif type(result) == dict:
-                                for message, nick in result.items():
-                                    self.setNick(nick)
-                                    self.sendMsg(message, msg)
-                                self.setNick(self.nick)
-                            elif type(result) == list:
-                                for message in result:
-                                    self.sendMsg(message, msg)
-                        else:
-                            self.sendMsg(response, msg)
-                        break
-            elif msg['type'] == "error":
-                print(msg)
+        try:
+            while True:
+                msg = message(json.loads(self.conn.recv()))
+                if msg.dict.type == 'ping-event':
+                    self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.dict.data.time}}))
+                elif msg.dict.type == 'send-event' and msg.dict.data.sender.name != self.nick:
+                    if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and msg.dict.data.sender.is_manager:
+                        self.kill()
+                    for regex, response in self.regexes.items():
+                        if re.search(regex, msg.dict.data.content) != None:
+                            if callable(response):
+                                result = response(self, msg)
+                                if type(result) == str:
+                                    self.sendMsg(result, msg)
+                                elif type(result) == dict:
+                                    for send, nick in result.items():
+                                        self.setNick(nick)
+                                        self.sendMsg(send, msg)
+                                    self.setNick(self.nick)
+                                elif type(result) == list:
+                                    for send in result:
+                                        self.sendMsg(send, msg)
+                            else:
+                                self.sendMsg(response, msg)
+                            break
+                elif msg.dict.type == 'error':
+                    print(msg.dict)
+        except Killed:
+            pass
     def setNick(self, nick):
         self.conn.send(json.dumps({'type': 'nick', 'data': {'name': nick}}))
+
+    def kill(self):
+        self.conn.close()
+        raise Killed
+
+class Killed(Exception):
+    pass
