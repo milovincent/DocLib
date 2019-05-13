@@ -9,10 +9,11 @@ class message:
         self.dict = AttrDict(json)
 
 class bot:
-    def __init__(self, nick, room):
+    def __init__(self, nick, room, owner=""):
         self.nick = nick
         self.room = room
         self.normname = re.sub(r"\s+", "", self.nick)
+        self.owner = owner
 
     def connect(self):
         self.conn = websocket.create_connection(f'wss://euphoria.io/room/{self.room}/ws')
@@ -25,6 +26,12 @@ class bot:
         print(f'Message sent: {reply.dict.data.content} replying to: {parent.dict.data.id} by {parent.dict.data.sender.name}')
         return reply
 
+    def restart(self, msg):
+        self.conn.close()
+        self.connect()
+        self.start()
+        self.sendMsg("Restarted", msg)
+
     def start(self):
         try:
             while True:
@@ -32,8 +39,10 @@ class bot:
                 if msg.dict.type == 'ping-event':
                     self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.dict.data.time}}))
                 elif msg.dict.type == 'send-event' and msg.dict.data.sender.name != self.nick:
-                    if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and msg.dict.data.sender.is_manager:
+                    if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.sender.name == self.owner:
                         self.kill()
+                    if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.sender.name == self.owner:
+                        self.restart()
                     for regex, response in self.regexes.items():
                         if re.search(regex, msg.dict.data.content) != None:
                             if callable(response):
