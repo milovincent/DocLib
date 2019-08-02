@@ -1,5 +1,4 @@
-usersToTag = ['Doctor Number Four', 'liff', 'sxafo', 'D10', 'Vanna', 'Vannesa', 'The Tenth Doctor', 'FibonacciDaniel', 'Mala Lupa']
-
+from doclib import bot, message
 def tumble(chatbot, msg):
     chatbot.setNick('tumbleweed')
     chatbot.sendMsg(parent = msg, msg = '/me rolls by')
