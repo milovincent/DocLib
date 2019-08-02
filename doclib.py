@@ -2,6 +2,7 @@ import websockets
 import websocket
 import json
 import re
+import random
 from attrdict import AttrDict
 
 class message:
@@ -21,6 +22,8 @@ class bot:
         print('connected.')
 
     def sendMsg(self, msg, parent=message()):
+        if re.search(r"^\[.+,.+\]$", msg):
+            msg = random.choice(msg[1:-1].split(","))
         self.conn.send(json.dumps({'type': 'send', 'data': {'content': msg, 'parent': parent.dict.data.id}}))
         reply = message(json.loads(self.conn.recv()))
         print(f'Message sent: {reply.dict.data.content} replying to: {parent.dict.data.id} by {parent.dict.data.sender.name}')
@@ -38,6 +41,7 @@ class bot:
                 msg = message(json.loads(self.conn.recv()))
                 if msg.dict.type == 'ping-event':
                     self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.dict.data.time}}))
+                    print("Pong!")
                 elif msg.dict.type == 'send-event' and msg.dict.data.sender.name != self.nick:
                     if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.sender.name == self.owner:
                         self.kill()
