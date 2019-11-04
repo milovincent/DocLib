@@ -45,7 +45,7 @@ class bot:
                 elif msg.dict.type == 'send-event' and msg.dict.data.sender.name != self.nick:
                     if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.data.sender.name == self.owner:
                         self.kill()
-                    if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.sender.name == self.owner:
+                    if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.data.sender.name == self.owner:
                         self.restart()
                     for regex, response in self.regexes.items():
                         if re.search(regex, msg.dict.data.content) != None:
