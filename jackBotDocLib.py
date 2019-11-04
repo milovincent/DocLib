@@ -133,7 +133,6 @@ jackBot.regexes = {r'(?i)([\s\S]*?)how([\s\S]*?)win([\s\S]*?)(jackbox|quiplash|b
                             r'(?i)back\.?\s?to\.?\s?the\.?\s?future': greatScott,
                             r'(?i)great\.?\s?scott': myThing, r'(?<![a-zA-Z0-9]{1}/)u/([a-zA-Z0-9_-]{3,20})\b': linker,r'(?<![a-zA-Z0-9]{1}/)r/([a-zA-Z0-9_-]{2,21})\b': linker,
                             '^!kill @jackbot$': kill,
-                            '^!killall @jackbot$': killall,
                             r'(?i)([\s\S]*?)where\.?\s?is(\.?\s?bot\.?\s?bot|([\s\S]*?)other\.?\s?bots)': 'BotBot is down right now, sorry! Ask =3 about it. It probably won\'t be up for some time, so you can run your own using one of the many bot libraries other people have made, such as yaboli (from @Garmy) and basebot (what jackBot uses, made by @Xyzzy). you do have to take care of server-side stuff though. :/',
                             r'(?i)Point for user jackBot registered\.': 'Why thank you!',
                             r'(?i)^!games (=3|niekie|@=3)$': '=3 has 10 of 25 Jackbox games.',
