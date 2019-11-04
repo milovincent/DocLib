@@ -8,7 +8,7 @@ from attrdict import AttrDict
 
 parser = argparse.ArgumentParser(description='A euphoria.io bot library.')
 parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
-args = parser.parse_args(namespace = self)
+
 
 class message:
     def __init__(self, json={}):
@@ -16,6 +16,7 @@ class message:
 
 class bot:
     def __init__(self, nick, room, owner = ""):
+        args = parser.parse_args(namespace = self)
         self.nick = nick
         self.room = room if not self.test else "test"
         self.normname = re.sub(r"\s+", "", self.nick)
