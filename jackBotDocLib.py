@@ -150,7 +150,7 @@ jackBot.regexes = {r'(?i)([\s\S]*?)how([\s\S]*?)win([\s\S]*?)(jackbox|quiplash|b
                             'how([\s\S]*?)base\.?\s?bot':xyzzers,
                             '/me spies an? @?jackBot':'/me spies you back',
                             '/me has resurrected @jackBot':alive,
-                            '^!help$':'I give you info about Jackbox games and how to play them. Just ask!',
+                            '^!help$':'I give you info about Jackbox games and how to play them. Just ask! If it\'s really important to you that I update for JBPP6, pester @DoctorNumberFour about it.',
                             r'(?i)(^|\s|\b)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)': honk, r'(?i)(^|\s|\b)honk($|\s|\b)': honkkonk}
 jackBot.connect()
 jackBot.start()
