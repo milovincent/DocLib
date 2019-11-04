@@ -37,9 +37,9 @@ def honk(chatbot, msg):
     for goose in geese:
         numberOfGeese += 1
         if goose[0] != '' and goose[0] != "1":
-            if re.match(pattern = r"(\d*?)", string = goose[0]):
+            if re.match(pattern = r"(\d*?)", string = goose[0]) != None:
                 numberOfGeese += int(goose[0]) - 1
-            else if re.match(pattern = r"(two|three|four|five|six|seven|eight|nine|ten)", string = goose[0]):
+            else if re.match(pattern = r"(two|three|four|five|six|seven|eight|nine|ten)", string = goose[0]) != None:
                 numberOfGeese += gooseLevel.get(goose[0], 1)
     for goose in range(0, numberOfGeese) :
         if goose < 9:
