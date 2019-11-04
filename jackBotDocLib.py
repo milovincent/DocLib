@@ -62,7 +62,7 @@ def honk(chatbot, msg):
             chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
             chatbot.setNick('jackBot')
             break
-        elif numberOfGeese = 10:
+        elif numberOfGeese == 10:
             chatbot.setNick('The Final Goose')
             chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
             chatbot.setNick('jackBot')
