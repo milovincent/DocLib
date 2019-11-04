@@ -7,7 +7,7 @@ import argparse
 from attrdict import AttrDict
 
 parser = argparse.ArgumentParser(description='A euphoria.io bot library.')
-parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
+parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true', default = False)
 
 
 class message:
