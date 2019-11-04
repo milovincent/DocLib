@@ -18,7 +18,7 @@ class bot:
     def __init__(self, nick, room, owner = ""):
         args = parser.parse_args(args = ["--test", "--debug", "-t"], namespace = self)
         self.nick = nick
-        self.room = room if not self.test else "test"
+        self.room = room if self.test != True else "test"
         print("Debug: " + str(self.test))
         self.normname = re.sub(r"\s+", "", self.nick)
         self.owner = owner
