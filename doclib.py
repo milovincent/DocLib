@@ -1,4 +1,3 @@
-import websockets
 import websocket
 import json
 import re
