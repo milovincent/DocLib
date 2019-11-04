@@ -55,15 +55,20 @@ def honk(chatbot, msg):
             chatbot.setNick(f'A{ordinals[goose]} Goose')
             chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
             chatbot.setNick('jackBot')
-        elif numberOfGeese > 20:
+        elif numberOfGeese > 15:
             chatbot.setNick('Another Throng of Geese')
             chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
             chatbot.setNick('The Final Goose')
             chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
             chatbot.setNick('jackBot')
             break
+        elif numberOfGeese = 10:
+            chatbot.setNick('The Final Goose')
+            chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
+            chatbot.setNick('jackBot')
+            break
         else:
-            chatbot.setNick(f'The Final Few Geese')
+            chatbot.setNick('The Final Few Geese')
             chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
             chatbot.setNick('jackBot')
             break
