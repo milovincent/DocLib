@@ -39,7 +39,7 @@ def myThing(chatbot, msg):
     chatbot.setNick('jackBot')
 
 def honk(chatbot, msg):
-    geese = re.findall(r'(?i)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)', meta['msg'].content, flags = 0)
+    geese = re.findall(r'(?i)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)', msg.dict.data.content, flags = 0)
     ordinals = ["", "nother", " Third", " Fourth", " Fifth", " Sixth", " Seventh", " Eighth", " Ninth", " Tenth"]
     numberOfGeese = 0
     gooseLevel = {"one":1, "two":2, "three":3, "four":4, "five":5, "six":6, "seven":7, "eight":8, "nine":9, "ten":10}
