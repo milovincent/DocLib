@@ -1,4 +1,6 @@
 from doclib import bot, message
+import re
+
 def tumble(chatbot, msg):
     chatbot.setNick('tumbleweed')
     chatbot.sendMsg(parent = msg, msg = '/me rolls by')
