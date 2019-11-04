@@ -36,17 +36,17 @@ def honk(chatbot, msg):
     gooseLevel = {"one":1, "two":2, "three":3, "four":4, "five":5, "six":6, "seven":7, "eight":8, "nine":9, "ten":10}
     for goose in geese:
         numberOfGeese += 1
-        if(goose[0] != '' and goose[0] != "1"):
-            if(re.match(pattern = r"(\d*?)", string = goose[0])):
+        if goose[0] != '' and goose[0] != "1":
+            if re.match(pattern = r"(\d*?)", string = goose[0]):
                 numberOfGeese += int(goose[0]) - 1
-            else if(re.match(pattern = r"(two|three|four|five|six|seven|eight|nine|ten)", string = goose[0])):
+            else if re.match(pattern = r"(two|three|four|five|six|seven|eight|nine|ten)", string = goose[0]):
                 numberOfGeese += gooseLevel.get(goose[0], 1)
     for goose in range(0, numberOfGeese) :
-        if(goose < 9):
+        if goose < 9:
             chatbot.setNick(f'A{ordinals[goose]} Goose')
             chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
             chatbot.setNick('jackBot')
-        else if(numberOfGeese > 20):
+        else if numberOfGeese > 20:
             chatbot.setNick('Another Throng of Geese')
             chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
             chatbot.setNick('The Final Goose')
