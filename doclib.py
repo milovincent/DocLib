@@ -27,7 +27,7 @@ class bot:
         self.setNick(self.nick)
         print('connected.')
 
-    def sendMsg(self, msg, parent=message()):
+    def sendMsg(self, msg, parent=message(self.conn.recv()))):
         if re.search(r"^\[.+,.+\]$", msg):
             msg = random.choice(msg[1:-1].split(","))
         self.conn.send(json.dumps({'type': 'send', 'data': {'content': msg, 'parent': parent.dict.data.id}}))
