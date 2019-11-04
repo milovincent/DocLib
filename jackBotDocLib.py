@@ -20,6 +20,11 @@ def xyzzers(chatbot, msg):
     if re.search("@xyzzy", msg.dict.data.content) == None:
         chatbot.sendMsg("Ask @Xyzzy.")
 
+def honkkonk(chatbot, msg):
+    chatbot.setNick('An Untitled Goose')
+    chatbot.sendMsg(parent = msg, msg = 'Glory to Hong Kong!')
+    chatbot.setNick('jackBot')
+
 def alive(chatbot, msg):
     chatbot.sendMsg(parent = msg, msg = '/me IS ALIVE!')
     chatbot.setNick('Thunder')
@@ -146,6 +151,6 @@ jackBot.regexes = {r'(?i)([\s\S]*?)how([\s\S]*?)win([\s\S]*?)(jackbox|quiplash|b
                             '/me spies an? @?jackBot':'/me spies you back',
                             '/me has resurrected @jackBot':alive,
                             '^!help$':'I give you info about Jackbox games and how to play them. Just ask!',
-                            r'(?i)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)': honk}
+                            r'(?i)(^|\s|\b)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)': honk, r'(?i)(^|\s|\b)honk($|\s|\b)': honkkonk}
 jackBot.connect()
 jackBot.start()
