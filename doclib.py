@@ -27,12 +27,12 @@ class bot:
         self.setNick(self.nick)
         print('connected.')
 
-    def sendMsg(self, msg, parent=message(self.conn.recv())):
+    def sendMsg(self, msg, parent = message()):
         if re.search(r"^\[.+,.+\]$", msg):
             msg = random.choice(msg[1:-1].split(","))
         self.conn.send(json.dumps({'type': 'send', 'data': {'content': msg, 'parent': parent.dict.data.id}}))
         reply = message(json.loads(self.conn.recv()))
-        print(f'Message sent: {reply.dict.data.content} replying to: {parent.dict.data.id} by {parent.dict.data.sender.name}')
+        print(f'Message sent: {reply} replying to: {parent.dict.data.id} by {parent.dict.data.sender.name}')
         return reply
 
     def restart(self, msg):
