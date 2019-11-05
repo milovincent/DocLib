@@ -48,7 +48,6 @@ class bot:
                 msg = message(json.loads(self.conn.recv()))
                 if msg.dict.type == 'ping-event':
                     self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.dict.data.time}}))
-                    print("Pong!")
                 elif msg.dict.type == 'send-event' and msg.dict.data.sender.name != self.nick:
                     if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.data.sender.name == self.owner:
                         self.kill()
