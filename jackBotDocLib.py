@@ -152,7 +152,7 @@ jackBot.regexes = {r'(?i)([\s\S]*?)how([\s\S]*?)win([\s\S]*?)(jackbox|quiplash|b
                             r'(?i)^!games (dnf|doctornumberfour|dn4|@DoctorNumberFour)$': '@DoctorNumberFour has 25 of 30 Jackbox games.',
                             r'(?i)^!games$': 'There are 25 games total that @DoctorNumberFour has, and 10 that =3 has. There are a total of 30 Jackbox games.',
                             '^!players$': 'Most games require at least 3 players (though Guesspionage and Fibbage only require 2 and several only require 1) and can hold up to 8 players (though Bracketeering can hold up to 16, Bidiots and Zeeple Dome hold 6, and Bomb Corp can only hold 4).',
-                            r'(?i)who([\s\S]*?)jack\.?\s?bot': 'I was Made by @DoctorNumberFour using Xyzzy\'s basebot library: https://github.com/CylonicRaider/basebot!',
+                            r'(?i)who([\s\S]*?)jack\.?\s?bot': 'I was Made by @DoctorNumberFour using his own bot library, DocLib: https://github.com/milovincent/DocLib !',
                             r'(?i)(when|where)([\s\S]*?)jack\.?\s?bot': 'I am an eldritch abomination from a land outside of time. Do not ask me such trivial things.',
                             r'(?i)^is\.?\s?this\.?\s?real\.?\s?life\??':'Yes',
                             'how([\s\S]*?)base\.?\s?bot':xyzzers,
