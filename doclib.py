@@ -53,6 +53,8 @@ class bot:
                         self.kill()
                     if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.data.sender.name == self.owner:
                         self.restart()
+                    if re.search('^!ping$', msg.dict.data.content) != None:
+                        self.sendMsg("Pong!", msg)
                     for regex, response in self.regexes.items():
                         if re.search(regex, msg.dict.data.content) != None:
                             if callable(response):
