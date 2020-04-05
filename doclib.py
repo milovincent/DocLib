@@ -33,11 +33,13 @@ class bot:
             msgString = random.choice(msgString[1:-1].split(","))
         if type(parent) is AttrDict:
             self.conn.send(json.dumps({'type': 'send', 'data': {'content': msgString, 'parent': parent.data.id}}))
+            reply = AttrDict(json.loads(self.conn.recv()))
             print(f'Message sent: {reply} replying to: {parent.data.id} by {parent.data.sender.name}')
         elif type(parent) is string:
             self.conn.send(json.dumps({'type': 'send', 'data': {'content': msgString, 'parent': parent}}))
-            print(f'Message sent: {reply} replying to: {parent.data.id}')
-        reply = AttrDict(json.loads(self.conn.recv()))
+            reply = AttrDict(json.loads(self.conn.recv()))
+            print(f'Message sent: {reply} replying to: {parent}')
+
         return reply
 
     def restart(self, msg):
