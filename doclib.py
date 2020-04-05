@@ -28,12 +28,16 @@ class bot:
         self.setNick(self.nick)
         print('connected.')
 
-    def sendMsg(self, msg, parent = message()):
-        if re.search(r"^\[.+,.+\]$", msg):
-            msg = random.choice(msg[1:-1].split(","))
-        self.conn.send(json.dumps({'type': 'send', 'data': {'content': msg, 'parent': parent.dict.data.id}}))
-        reply = message(json.loads(self.conn.recv()))
-        print(f'Message sent: {reply} replying to: {parent.dict.data.id} by {parent.dict.data.sender.name}')
+    def sendMsg(self, msgString, parent = None):
+        if re.search(r"^\[.+,.+\]$", msgString):
+            msgString = random.choice(msgString[1:-1].split(","))
+        if type(parent) is AttrDict:
+            self.conn.send(json.dumps({'type': 'send', 'data': {'content': msgString, 'parent': parent.data.id}}))
+            print(f'Message sent: {reply} replying to: {parent.data.id} by {parent.data.sender.name}')
+        elif type(parent) is string:
+            self.conn.send(json.dumps({'type': 'send', 'data': {'content': msgString, 'parent': parent}}))
+            print(f'Message sent: {reply} replying to: {parent.data.id}')
+        reply = AttrDict(json.loads(self.conn.recv()))
         return reply
 
     def restart(self, msg):
@@ -45,37 +49,44 @@ class bot:
     def start(self):
         try:
             while True:
-                msg = message(json.loads(self.conn.recv()))
-                if msg.dict.type == 'ping-event':
-                    self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.dict.data.time}}))
-                elif msg.dict.type == 'send-event' and msg.dict.data.sender.name != self.nick:
-                    if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.data.sender.name == self.owner:
-                        self.kill()
-                    if re.search(f'^!kill @{self.normname}$', msg.dict.data.content) != None and "is_manager" in msg.dict.data.sender.keys() or msg.dict.data.sender.name == self.owner:
-                        self.restart()
-                    if re.search('^!ping$', msg.dict.data.content) != None:
-                        self.sendMsg("Pong!", msg)
-                    for regex, response in self.regexes.items():
-                        if re.search(regex, msg.dict.data.content) != None:
-                            if callable(response):
-                                result = response(self, msg)
-                                if type(result) == str:
-                                    self.sendMsg(result, msg)
-                                elif type(result) == dict:
-                                    for send, nick in result.items():
-                                        self.setNick(nick)
-                                        self.sendMsg(send, msg)
-                                    self.setNick(self.nick)
-                                elif type(result) == list:
-                                    for send in result:
-                                        self.sendMsg(send, msg)
-                            else:
-                                self.sendMsg(response, msg)
-                            break
-                elif msg.dict.type == 'error':
+                msg = AttrDict(json.loads(self.conn.recv()))
+                if msg.type == 'ping-event':
+                    self.handle_ping(msg)
+                elif msg.type == 'send-event' and msg.data.sender.name != self.nick:
+                    self.handle_message(msg)
+                elif msg.type == 'error':
                     print(msg.dict)
         except Killed:
             pass
+
+    def handle_ping(self, msg):
+        self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.data.time}}))
+
+    def handle_message(self, msg):
+        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+            self.kill()
+        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+            self.restart()
+        if re.search('^!ping$', msg.data.content) != None:
+            self.sendMsg("Pong!", msg)
+        for regex, response in self.regexes.items():
+            if re.search(regex, msg.data.content) != None:
+                if callable(response):
+                    result = response(self, msg)
+                    if type(result) == str:
+                        self.sendMsg(result, msg)
+                    elif type(result) == dict:
+                        for send, nick in result.items():
+                            self.setNick(nick)
+                            self.sendMsg(send, msg)
+                        self.setNick(self.nick)
+                    elif type(result) == list:
+                        for send in result:
+                            self.sendMsg(send, msg)
+                else:
+                    self.sendMsg(response, msg)
+                break
+
     def setNick(self, nick):
         self.conn.send(json.dumps({'type': 'nick', 'data': {'name': nick}}))
 

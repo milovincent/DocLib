@@ -16,11 +16,11 @@ def kill(chatbot, msg):
 
 def greatScott(chatbot, msg):
     chatbot.setNick('DocBrown')
-    chatbot.sendMsg(parent = msg, msg = 'Great Scott, %s' % (msg.dict.data.sender))
+    chatbot.sendMsg(parent = msg, msg = 'Great Scott, %s' % (msg.data.sender))
     chatbot.setNick('jackBot')
 
 def xyzzers(chatbot, msg):
-    if re.search("@xyzzy", msg.dict.data.content) == None:
+    if re.search("@xyzzy", msg.data.content) == None:
         chatbot.sendMsg("Ask @Xyzzy.")
 
 def honkkonk(chatbot, msg):
@@ -40,7 +40,7 @@ def myThing(chatbot, msg):
     chatbot.setNick('jackBot')
 
 def honk(chatbot, msg):
-    geese = re.findall(r'(?i)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)', msg.dict.data.content, flags = 0)
+    geese = re.findall(r'(?i)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)', msg.data.content, flags = 0)
     ordinals = ["", "nother", " Third", " Fourth", " Fifth", " Sixth", " Seventh", " Eighth", " Ninth", " Tenth"]
     numberOfGeese = 0
     gooseLevel = {"one":1, "two":2, "three":3, "four":4, "five":5, "six":6, "seven":7, "eight":8, "nine":9, "ten":10}
@@ -75,20 +75,20 @@ def honk(chatbot, msg):
             break
 
 def linker(chatbot, msg):
-    if msg.dict.data.sender != 'RedditLinker':
-        users = re.findall(r'(?<![a-zA-Z0-9])/?u/([a-zA-Z0-9_-]{3,20})\b', msg.dict.data.content, flags=0)
+    if msg.data.sender != 'RedditLinker':
+        users = re.findall(r'(?<![a-zA-Z0-9])/?u/([a-zA-Z0-9_-]{3,20})\b', msg.data.content, flags=0)
         for i in users:
             chatbot.setNick('RedditLinker')
             chatbot.sendMsg(parent = msg, msg = 'reddit.com/u/%s' % i)
             chatbot.setNick('jackBot')
-        reddits = re.findall(r'(?<![a-zA-Z0-9])/?r/([a-zA-Z0-9_-]{2,21})\b', msg.dict.data.content, flags=0)
+        reddits = re.findall(r'(?<![a-zA-Z0-9])/?r/([a-zA-Z0-9_-]{2,21})\b', msg.data.content, flags=0)
         for i in reddits:
             chatbot.setNick('RedditLinker')
             chatbot.sendMsg(parent = msg, msg = 'reddit.com/r/%s' % i)
             chatbot.setNick('jackBot')
 
 def room(chatbot, msg):
-    if msg.dict.data.sender != 'Heimdall':
+    if msg.data.sender != 'Heimdall':
         message = 'You\'re in &%s! Welcome! Say hi, guys!' % (chatbot.room)
         chatbot.sendMsg(message)
 
