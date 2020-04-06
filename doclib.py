@@ -5,15 +5,17 @@ import re
 import random
 import argparse
 from attrdict import AttrDict
+from getpass import getpass
 
 
 
 
 class Bot:
-    def __init__(self, nick, room = "bots", owner = ""):
-        parser = argparse.ArgumentParser(description='A euphoria.io bot.', prog=nick)
+    def __init__(self, nick, room = "bots", owner = "", password = ""):
+        parser = argparse.ArgumentParser(description=f'{nick}: A euphoria.io bot.')
         parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
-        parser.add_argument("--room", "-r", help = "Set the room the bot will be placed in. Default is %(room)s.", action = "store", default = room)
+        parser.add_argument("--room", "-r", help = f"Set the room the bot will be placed in. Default: {room}", action = "store", default = room)
+        parser.add_argument("--password", "-p", help = "Set the password for the room the bot will be placed in.", action = "store", default = password)
 
         args = parser.parse_args()
 
@@ -22,10 +24,21 @@ class Bot:
         print("Debug: " + str(args.test))
         self.normname = re.sub(r"\s+", "", self.nick)
         self.owner = owner
+        self.password = args.password
 
     def connect(self):
         self.conn = websocket.create_connection(f'wss://euphoria.io/room/{self.room}/ws')
-        self.setNick(self.nick)
+        reply = AttrDict(json.loads(self.conn.recv()))
+        reply = AttrDict(json.loads(self.conn.recv()))
+        self.handle_ping(reply)
+        reply = AttrDict(json.loads(self.conn.recv()))
+        if reply.type == "snapshot-event":
+            self.setNick(self.nick)
+        elif reply.type == "bounce-event":
+            self.handle_auth(self.password)
+            self.setNick(self.nick)
+        else:
+            print(reply)
         print('connected.')
 
     def sendMsg(self, msgString, parent = None):
@@ -58,6 +71,8 @@ class Bot:
                     self.handle_message(msg)
                 elif msg.type == 'error':
                     print(msg.dict)
+                elif msg.type == 'bounce-event':
+                    self.handle_auth(msg)
         except Killed:
             pass
 
@@ -88,6 +103,15 @@ class Bot:
                 else:
                     self.sendMsg(response, msg)
                 break
+
+    def handle_auth(self, pw):
+        self.conn.send(json.dumps({'type': 'auth', 'data': {'type': 'passcode', 'passcode': pw}}))
+        reply = AttrDict(json.loads(self.conn.recv()))
+        if reply.data.success == True:
+            print(f'Successfully logged into {self.room}.')
+        else:
+            print(f'Login unsuccessful. Reason: {reply.data.reason}')
+            self.handle_auth(getpass("Enter the correct password: "))
 
     def setNick(self, nick):
         self.conn.send(json.dumps({'type': 'nick', 'data': {'name': nick}}))
