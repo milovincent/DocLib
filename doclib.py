@@ -55,7 +55,7 @@ class Bot:
 
         return reply
 
-    def restart(self, msg):
+    def restart(self, msg = None):
         self.conn.close()
         self.connect()
         self.start()
@@ -76,13 +76,29 @@ class Bot:
         except Killed:
             pass
 
+    def advanced_start(self, function):
+        if callable(function):
+            try:
+                while True:
+                    msg = AttrDict(json.loads(self.conn.recv()))
+                    if msg.type == 'send-event' and msg.data.sender.name != self.nick:
+                        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+                            self.kill()
+                        if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+                            self.restart()
+                    self.function(msg)
+            except Killed:
+                pass
+        else:
+            print("Advanced start must be given a callable message handler function that takes an AttrDict as its argument.")
+
     def handle_ping(self, msg):
         self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.data.time}}))
 
     def handle_message(self, msg):
         if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
             self.kill()
-        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+        if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
             self.restart()
         if re.search('^!ping$', msg.data.content) != None:
             self.sendMsg("Pong!", msg)
@@ -119,6 +135,17 @@ class Bot:
     def kill(self):
         self.conn.close()
         raise Killed
+
+    def get_userlist(self):
+        self.conn.send(json.dumps({'type': 'who', 'data': {}}))
+        reply = AttrDict(json.loads(self.conn.recv()))
+        while reply.type != "who-reply":
+            reply = AttrDict(json.loads(self.conn.recv()))
+        return reply.data.listing
+
+    def move_to(self, roomName, password = ""):
+        self.room = roomName
+        self.restart()
 
 class Killed(Exception):
     pass
