@@ -79,7 +79,10 @@ class Bot:
         except Killed:
             pass
 
-    def advanced_start(self, function):
+    def nothing(msg):
+        return
+
+    def advanced_start(self, function = nothing):
         if callable(function):
             try:
                 while True:
