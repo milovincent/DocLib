@@ -8,7 +8,7 @@ def doubleReply(chatbot, msg):
     chatbot.sendMsg('reply 2', parent=msg2)
 
 
-sampleBot = Bot('bugBot', 'xkcd', "Doctor Number Four")
+sampleBot = Bot(nick = 'bugBot', room = 'test', owner = "sample user")
 sampleBot.regexes = {'^!test$':sample, '^!replyTwice$':doubleReply, '^!trouble$':"Which standard troubleshooting techniques did you apply?\nHow did you try to diagnose the problem?\nWhich Internet search queries produced which results?\nWhich of the proposed resolutions did you try?"}
 
 
