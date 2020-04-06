@@ -145,6 +145,7 @@ class Bot:
 
     def move_to(self, roomName, password = ""):
         self.room = roomName
+        self.password = password
         self.restart()
 
 class Killed(Exception):
