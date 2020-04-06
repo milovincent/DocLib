@@ -6,6 +6,8 @@ import random
 import argparse
 from attrdict import AttrDict
 
+parser = argparse.ArgumentParser(description='A euphoria.io bot library.')
+parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
 
 
 class message:
@@ -14,12 +16,11 @@ class message:
 
 class bot:
     def __init__(self, nick, room, owner = ""):
-        parser = argparse.ArgumentParser(description='A euphoria.io bot library.')
-        parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_false')
-        args = parser.parse_args(args = ["--test", "--debug", "-t"], namespace = self)
+        args = parser.parse_args()
+
         self.nick = nick
-        self.room = room if self.test != True else "test"
-        print("Debug: " + str(self.test))
+        self.room = room if args.test != True else "test"
+        print("Debug: " + str(args.test))
         self.normname = re.sub(r"\s+", "", self.nick)
         self.owner = owner
 
