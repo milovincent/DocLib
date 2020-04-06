@@ -15,4 +15,4 @@ sampleBot.regexes = {'^!test$':sample, '^!replyTwice$':doubleReply, '^!trouble$'
 
 
 sampleBot.connect()
-sampleBot.start()
+sampleBot.simple_start()

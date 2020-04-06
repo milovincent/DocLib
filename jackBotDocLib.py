@@ -172,4 +172,4 @@ jackBot.regexes = { r'(?i)([\s\S]*?)how([\s\S]*?)win([\s\S]*?)(jackbox|quiplash|
                             r'(?i)(^|\s|\b)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)': honk, r'(?i)(^|\s|\b)honk($|\s|\b)': honkkonk,
                             r'^!listusers$' : userlist}
 jackBot.connect()
-jackBot.start()
+jackBot.simple_start()

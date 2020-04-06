@@ -25,6 +25,7 @@ class Bot:
         self.normname = re.sub(r"\s+", "", self.nick)
         self.owner = owner
         self.password = args.password
+        self.handlers = {}
 
     def connect(self):
         self.conn = websocket.create_connection(f'wss://euphoria.io/room/{self.room}/ws')
@@ -61,7 +62,7 @@ class Bot:
         self.start()
         self.sendMsg("Restarted", msg)
 
-    def start(self):
+    def simple_start(self):
         try:
             while True:
                 msg = AttrDict(json.loads(self.conn.recv()))
@@ -73,6 +74,8 @@ class Bot:
                     print(msg.dict)
                 elif msg.type == 'bounce-event':
                     self.handle_auth(msg)
+                else:
+                    self.handle_other(msg)
         except Killed:
             pass
 
@@ -86,7 +89,10 @@ class Bot:
                             self.kill()
                         if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
                             self.restart()
-                    self.function(msg)
+                    if msg.type in self.handlers.keys():
+                        self.handlers[msg.type](msg)
+                    else:
+                        self.function(msg)
             except Killed:
                 pass
         else:
@@ -96,9 +102,9 @@ class Bot:
         self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.data.time}}))
 
     def handle_message(self, msg):
-        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and is_priveleged(msg.data.sender):
             self.kill()
-        if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+        if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and is_priveleged(msg.data.sender):
             self.restart()
         if re.search('^!ping$', msg.data.content) != None:
             self.sendMsg("Pong!", msg)
@@ -129,12 +135,20 @@ class Bot:
             print(f'Login unsuccessful. Reason: {reply.data.reason}')
             self.handle_auth(getpass("Enter the correct password: "))
 
+    def handle_other(self, msg):
+        if msg.type in self.handlers.keys():
+            self.handlers[msg.type](msg)
+
+
     def setNick(self, nick):
         self.conn.send(json.dumps({'type': 'nick', 'data': {'name': nick}}))
 
     def kill(self):
         self.conn.close()
         raise Killed
+
+    def is_priveleged(user):
+        return "is_manager" in user.keys() or user.name == self.owner
 
     def get_userlist(self):
         self.conn.send(json.dumps({'type': 'who', 'data': {}}))
@@ -147,6 +161,12 @@ class Bot:
         self.room = roomName
         self.password = password
         self.restart()
+
+    def set_handler(self, eventString, function):
+        if callable(function):
+            self.handlers += {eventString : function}
+        else:
+            print(f"WARNING: handler for {eventString} not callable, handler not set.")
 
 class Killed(Exception):
     pass
