@@ -10,11 +10,8 @@ parser = argparse.ArgumentParser(description='A euphoria.io bot library.')
 parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
 
 
-class message:
-    def __init__(self, json={}):
-        self.dict = AttrDict(json)
 
-class bot:
+class Bot:
     def __init__(self, nick, room, owner = ""):
         args = parser.parse_args()
 

@@ -1,4 +1,4 @@
-from doclib import bot, message
+from doclib import Bot
 import re
 
 def tumble(chatbot, msg):
@@ -92,7 +92,7 @@ def room(chatbot, msg):
         message = 'You\'re in &%s! Welcome! Say hi, guys!' % (chatbot.room)
         chatbot.sendMsg(message)
 
-jackBot = bot("jackBot", "xkcd", "DoctorNumberFour")
+jackBot = Bot("jackBot", "xkcd", "DoctorNumberFour")
 jackBot.regexes = {r'(?i)([\s\S]*?)how([\s\S]*?)win([\s\S]*?)(jackbox|quiplash|bracketeering|earwax|trivia murder party|t\.?\s?m\.?\s?p|tmp|\bt(?:ee)?\.?\s?k\.?\s?o\b|civic doodle|fibbage|guesspionage|bidiots|survive the internet|bomb corp|zeeple dome|mad verse city|y\.?\s?d\.?\s?k\.?\s?j|you don\'?t know jack|patently stupid|split the room)': "I'm not gonna tell you how to cheat! Mostly because I don't know :/",
                             r'(?i)([\s\S]*?)how([\s\S]*?)many (?!(people|players|participants))([\s\S]*?)jackbox': 'There are 25 games total that @DoctorNumberFour has, and 10 that =3 has. Most games require at least 3 players (though Guesspionage and Fibbage only require 2 (and several only require 1! ^^)) and can hold up to 8 players, though Bracketeering can hold up to 16 and a few have lower limits. In the future, please use !games for the number of games, and !players [game] for number of players.',
                             r'(?i)([\s\S]*?)how([\s\S]*?)many([\s\S]*?)(people|players|participants)([\s\S]*?)(?!(need|have|must))([\s\S]*?)(jackbox|quiplash|bracketeering|earwax|trivia murder party|t\.?\s?m\.?\s?p|tmp|\bt(?:ee)?\.?\s?k\.?\s?o\b|civic doodle|fibbage|guesspionage|bidiots|survive the internet|bomb corp|zeeple dome|mad verse city|y\.?\s?d\.?\s?k\.?\s?j|you don\'?t know jack|patently stupid|split the room)': 'Most games require at least 3 players (though Guesspionage and Fibbage only require 2 (and several only require 1! ^^)) and can hold up to 8 players, though Bracketeering can hold up to 16.',
