@@ -6,17 +6,19 @@ import random
 import argparse
 from attrdict import AttrDict
 
-parser = argparse.ArgumentParser(description='A euphoria.io bot library.')
-parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
 
 
 
 class Bot:
-    def __init__(self, nick, room, owner = ""):
+    def __init__(self, nick, room = "bots", owner = ""):
+        parser = argparse.ArgumentParser(description='A euphoria.io bot.', prog=nick)
+        parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
+        parser.add_argument("--room", "-r", help = "Set the room the bot will be placed in. Default is %(room)s.", action = "store", default = room)
+
         args = parser.parse_args()
 
         self.nick = nick
-        self.room = room if args.test != True else "test"
+        self.room = args.room if args.test != True else "test"
         print("Debug: " + str(args.test))
         self.normname = re.sub(r"\s+", "", self.nick)
         self.owner = owner
