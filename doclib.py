@@ -85,9 +85,9 @@ class Bot:
                 while True:
                     msg = AttrDict(json.loads(self.conn.recv()))
                     if msg.type == 'send-event' and msg.data.sender.name != self.nick:
-                        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+                        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and is_privileged(msg.data.sender):
                             self.kill()
-                        if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and "is_manager" in msg.data.sender.keys() or msg.data.sender.name == self.owner:
+                        if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and is_privileged(msg.data.sender):
                             self.restart()
                     if msg.type in self.handlers.keys():
                         self.handlers[msg.type](msg)
@@ -102,9 +102,9 @@ class Bot:
         self.conn.send(json.dumps({'type': 'ping-reply', 'data': {'time': msg.data.time}}))
 
     def handle_message(self, msg):
-        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and is_priveleged(msg.data.sender):
+        if re.search(f'^!kill @{self.normname}$', msg.data.content) != None and is_privileged(msg.data.sender):
             self.kill()
-        if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and is_priveleged(msg.data.sender):
+        if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and is_privileged(msg.data.sender):
             self.restart()
         if re.search('^!ping$', msg.data.content) != None:
             self.sendMsg("Pong!", msg)
@@ -147,7 +147,7 @@ class Bot:
         self.conn.close()
         raise Killed
 
-    def is_priveleged(user):
+    def is_privileged(user):
         return "is_manager" in user.keys() or user.name == self.owner
 
     def get_userlist(self):
