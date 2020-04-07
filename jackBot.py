@@ -100,7 +100,7 @@ def userlist(chatbot, msg):
     return response
 
 jackBot = Bot(nick = "jackBot", room = "xkcd", owner = "DoctorNumberFour")
-jackBot.regexes = {         r'(?i)([\s\S]*?)where\.?\s?am\.?\s?i': room,
+jackBot.set_regexes({         r'(?i)([\s\S]*?)where\.?\s?am\.?\s?i': room,
                             r'(?i)this\.?\s?town\.?\s?(ain\'t|aint|isn\'t|isnt|is not)\.?\s?big\.?\s?enough\.?\s?for\.?\s?(the\.?\s?two\.?\s?of\.?\s?us|the both of us|us two|both of us)': tumble,
                             r'(?i)gigawatt': greatScott,
                             r'(?i)back\.?\s?to\.?\s?the\.?\s?future': greatScott,
@@ -123,7 +123,7 @@ jackBot.regexes = {         r'(?i)([\s\S]*?)where\.?\s?am\.?\s?i': room,
                             r'(?i)^!doclib$':'https://github.com/milovincent/DocLib',
                             '^!help$':'I\'m a miscellaneous bot made by @DoctorNumberFour using his Python 3 bot library, DocLib (!doclib for a github link.) I\'m slowly being updated to give info on every jackbox game.',
                             r'(?i)(^|\s|\b)(\d*?|two|three|four|five|six|seven|eight|nine|ten)(^|\s|\b)g(oo|ee)se($|\s|\b)': honk, r'(?i)(^|\s|\b)honk($|\s|\b)': honkkonk,
-                            r'^!listusers$' : userlist}
+                            r'^!listusers$' : userlist})
 jackBot.connect()
 jackBot.simple_start()
 # #r'(?i)([\s\S]*?)how([\s\S]*?)win([\s\S]*?)(jackbox|quiplash|bracketeering|earwax|trivia murder party|t\.?\s?m\.?\s?p|tmp|\bt(?:ee)?\.?\s?k\.?\s?o\b|civic doodle|fibbage|guesspionage|bidiots|survive the internet|bomb corp|zeeple dome|mad verse city|y\.?\s?d\.?\s?k\.?\s?j|you don\'?t know jack|patently stupid|split the room)': "I'm not gonna tell you how to cheat! Mostly because I don't know :/",

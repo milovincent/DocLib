@@ -11,7 +11,7 @@ from getpass import getpass
 
 
 class Bot:
-    def __init__(self, nick, room = "bots", owner = "", password = ""):
+    def __init__(self, nick, room = "bots", owner = "", password = "", help = None, ping = None):
         parser = argparse.ArgumentParser(description=f'{nick}: A euphoria.io bot.')
         parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
         parser.add_argument("--room", "-r", help = f"Set the room the bot will be placed in. Default: {room}", action = "store", default = room)
@@ -26,6 +26,9 @@ class Bot:
         self.owner = owner
         self.password = args.password
         self.handlers = {}
+        self.help = help
+        self.ping = ping
+
 
     def connect(self):
         self.conn = websocket.create_connection(f'wss://euphoria.io/room/{self.room}/ws')
@@ -82,6 +85,21 @@ class Bot:
     def nothing(msg):
         return
 
+    def set_regexes(self, regexes):
+        self.regexes = regexes
+        if self.help == None:
+            if f"^!help @{self.normname}$" in regexes.keys():
+                self.help = regexes[f"^!help @{self.normname}$"]
+            else:
+                self.help = f"@{self.normname} is a bot made with Doctor Number Four's Python 3 bot library, DocLib (link: https://github.com/milovincent/DocLib) by @{self.owner}. It follows botrulez and does not have a custom !help message yet."
+        if self.ping == None:
+            if '^!ping$' in regexes.keys():
+                self.ping = regexes['^!ping$']
+            elif f'^!ping @{self.normname}$' in regexes.keys():
+                self.ping = regexes[f'^!ping @{self.normname}$']
+            else:
+                self.ping = "Pong!"
+
     def advanced_start(self, function = nothing):
         if callable(function):
             try:
@@ -109,8 +127,10 @@ class Bot:
             self.kill()
         if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and is_privileged(msg.data.sender):
             self.restart()
-        if re.search('^!ping$', msg.data.content) != None:
-            self.sendMsg("Pong!", msg)
+        if re.search('^!ping$', msg.data.content) != None or re.search(f'^!ping @{self.normnaem}$', msg.data.content) != None:
+            self.sendMsg(self.ping, msg)
+        if re.search(f'^!help @{self.normname}$', msg.data.content):
+            self.sendMsg(self.help, msg)
         for regex, response in self.regexes.items():
             if re.search(regex, msg.data.content) != None:
                 if callable(response):
