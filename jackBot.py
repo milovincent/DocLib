@@ -99,7 +99,7 @@ def userlist(chatbot, msg):
             response += user.name + "\n"
     return response
 
-jackBot = Bot(nick = "jackBot", room = "xkcd", owner = "DoctorNumberFour")
+jackBot = Bot(nick = "jackBot", room = "xkcd", owner = "DoctorNumberFour", help = 'I\'m a miscellaneous bot made by @DoctorNumberFour using his Python 3 bot library, DocLib (!doclib for a github link.) I\'m slowly being updated to give info on every jackbox game.')
 jackBot.set_regexes({         r'(?i)([\s\S]*?)where\.?\s?am\.?\s?i': room,
                             r'(?i)this\.?\s?town\.?\s?(ain\'t|aint|isn\'t|isnt|is not)\.?\s?big\.?\s?enough\.?\s?for\.?\s?(the\.?\s?two\.?\s?of\.?\s?us|the both of us|us two|both of us)': tumble,
                             r'(?i)gigawatt': greatScott,
@@ -108,7 +108,7 @@ jackBot.set_regexes({         r'(?i)([\s\S]*?)where\.?\s?am\.?\s?i': room,
                             '^!kill @jackbot$': kill,
                             r'(?i)([\s\S]*?)where\.?\s?is(\.?\s?bot\.?\s?bot|([\s\S]*?)other\.?\s?bots)': 'BotBot is back up in &bots, courtesy of @DoctorNumberFour and @myhandsaretypingwords! If you want to use an external tool though, there\'s still yaboli (a Python library from Garmy), basebot (a Python library from Xyzzy), and DocLib (a Python library from DoctorNumberFour, used to make jackBot).\n use ![library name] for a link to the github pages of each library to get started, or go to &bots to use the almighty BotBot (reborn as DotBot) again!',
                             r'(?i)Point for user jackBot registered\.': 'Why thank you!',
-                            r'(?i)^!games (=3|niekie|@=3)$': '=3 has 10 of 25 Jackbox games.',
+                            r'(?i)^!games (=3|meta|@=3)$': 'Meta has 10 of 25 Jackbox games.',
                             r'(?i)^!games (dnf|doctornumberfour|dn4|@DoctorNumberFour)$': '@DoctorNumberFour has 25 of 30 Jackbox games.',
                             r'(?i)^!games$': 'There are 31 games total that @DoctorNumberFour has, and 10 that =3 has. There are a total of 30 Jackbox games in the party packs, with a few standalone ones.',
                             '^!players$': 'Most games require at least 3 players (though Guesspionage and Fibbage only require 2 and several only require 1) and can hold up to 8 players (though Bracketeering can hold up to 16, Bidiots and Zeeple Dome hold 6, and Bomb Corp can only hold 4).',
