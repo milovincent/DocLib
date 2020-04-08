@@ -12,7 +12,7 @@ from getpass import getpass
 
 
 class Bot:
-    def __init__(self, nick, room = "bots", owner = None, password = "", help = None, ping = None, important = False, killed = None):
+    def __init__(self, nick, room = "bots", owner = None, password = "", help = None, ping = None, important = False, killed = None, API_timeout = 10):
         parser = argparse.ArgumentParser(description=f'{nick}: A euphoria.io bot.')
         parser.add_argument("--test", "--debug", "-t", help = "Used to debug dev builds. Sends bot to &test instead of its default room.", action = 'store_true')
         parser.add_argument("--room", "-r", help = f"Set the room the bot will be placed in. Default: {room}", action = "store", default = room)
@@ -32,11 +32,12 @@ class Bot:
         self.ping = ping
         self.important = important
         self.killed = killed
+        self.API_timeout = API_timeout
 
 
     def connect(self):
         self.conn = websocket.create_connection(f'wss://euphoria.io/room/{self.room}/ws')
-        reply = AttrDict(json.loads(self.conn.recv()))
+        self.conn.recv()
         reply = AttrDict(json.loads(self.conn.recv()))
         self.handle_ping(reply)
         reply = AttrDict(json.loads(self.conn.recv()))
@@ -63,7 +64,7 @@ class Bot:
                     reply = msg
                     print(f'Message sent: {reply} replying to: {parent.data.id} by {parent.data.sender.name}')
                     return reply
-                if i > 10:
+                if i > self.API_timeout:
                     print("send-reply API response not recorded. reason: too many events before send-reply.")
                     return None
 
@@ -78,7 +79,7 @@ class Bot:
                     reply = msg
                     print(f'Message sent: {reply} replying to: {parent}')
                     return reply
-                if i > 10:
+                if i > self.API_timeout:
                     print("send-reply API response not recorded. reason: too many events before send-reply.")
                     return None
 
@@ -215,7 +216,7 @@ class Bot:
                     print(f'Login unsuccessful. Reason: {reply.data.reason}')
                     self.handle_auth(getpass("Enter the correct password: "))
                 break
-            if i > 10:
+            if i > self.API_timeout:
                 print("Auth Error: auth-reply API response not recorded.")
                 break
 
@@ -242,7 +243,7 @@ class Bot:
                 reply = msg
                 print(f'Message sent: {reply} replying to: {parent.data.id} by {parent.data.sender.name}')
                 return reply.data.listing
-            if i > 10:
+            if i > self.API_timeout:
                 print("who-reply API response not recorded. reason: too many events before who-reply.")
                 return None
 
