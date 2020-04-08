@@ -3,4 +3,4 @@ __pycache__/
 nohup.*
 .DS_Store/
 get-pip.py
-
+logs/
