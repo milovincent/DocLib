@@ -91,7 +91,7 @@ class Bot:
             if f"^!help @{self.normname}$" in regexes.keys():
                 self.help = regexes[f"^!help @{self.normname}$"]
             else:
-                self.help = f"@{self.normname} is a bot made with Doctor Number Four's Python 3 bot library, DocLib (link: https://github.com/milovincent/DocLib) by @{self.owner}. It follows botrulez and does not have a custom !help message yet."
+                self.help = f"@{self.normname} is a bot made with Doctor Number Four's Python 3 bot library, DocLib (link: https://github.com/milovincent/DocLib) by @{self.owner}.\nIt follows botrulez and does not have a custom !help message yet."
         if self.ping == None:
             if '^!ping$' in regexes.keys():
                 self.ping = regexes['^!ping$']
