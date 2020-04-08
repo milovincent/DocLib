@@ -127,7 +127,7 @@ class Bot:
             self.kill()
         if re.search(f'^!restart @{self.normname}$', msg.data.content) != None and is_privileged(msg.data.sender):
             self.restart()
-        if re.search('^!ping$', msg.data.content) != None or re.search(f'^!ping @{self.normnaem}$', msg.data.content) != None:
+        if re.search('^!ping$', msg.data.content) != None or re.search(f'^!ping @{self.normname}$', msg.data.content) != None:
             self.sendMsg(self.ping, msg)
         if re.search(f'^!help @{self.normname}$', msg.data.content):
             self.sendMsg(self.help, msg)
