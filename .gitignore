@@ -4,3 +4,4 @@ nohup.*
 .DS_Store/
 get-pip.py
 logs/
+jackBot/
