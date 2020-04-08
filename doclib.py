@@ -43,7 +43,7 @@ class Bot:
             self.setNick(self.nick)
         else:
             print(reply)
-        print('connected.')
+        print(f'connected to &{self.room}.')
 
     def sendMsg(self, msgString, parent = None):
         if re.search(r"^\[.+,.+\]$", msgString):
